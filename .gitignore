@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+#chen-visual diagram檔案
+*.lck
+*.bak_*
+*.vbak
