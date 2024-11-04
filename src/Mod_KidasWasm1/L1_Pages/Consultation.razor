@@ -1,0 +1,40 @@
+﻿@page "/consultation"
+@inject Mod_KidasWasm1.L4_Service.KidasServerService KidasService
+@using BlazorStrap
+
+<h3 class="text-primary">綜合會話</h3>
+<BSCard>
+    <BSCardBody>
+        <BSCardSubtitle>會話紀錄</BSCardSubtitle>
+        <div class="conversation-log">
+            @foreach (var message in chatHistory)
+            {
+                <p>@message</p>
+            }
+        </div>
+    </BSCardBody>
+</BSCard>
+
+<div class="input-area mt-3">
+    <BSFormGroup>
+        <label for="userInput">您的提問</label>
+        <BSInput Value="userInput" ValueChanged="EventCallback.Factory.Create<string>(this, e => userInput = e)" Placeholder="請輸入您的問題" />
+    </BSFormGroup>
+    <BSButton Color="Primary" @onclick="SendMessage">Send</BSButton>
+</div>
+
+@code {
+    private string userInput = string.Empty;
+    private List<string> chatHistory = new List<string>();
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(userInput))
+        {
+            chatHistory.Add($"您: {userInput}");
+            var response = await KidasService.ChatCompletion(userInput); // 呼叫KidasServerService的ChatCompletion
+            chatHistory.Add($"系統: {response}");
+            userInput = string.Empty; // 清空輸入框
+        }
+    }
+}
